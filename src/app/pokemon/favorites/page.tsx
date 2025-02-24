@@ -32,6 +32,12 @@ export default function FavoritesPage() {
     fetchFavorites();
   }, []);
 
+  // Function to clear all favorites
+  const clearFavorites = () => {
+    localStorage.removeItem("favorites");
+    setFavoritePokemon([]); // Clear the displayed favorites
+  };
+
   return (
     <div className="p-6">
       <h1 className="text-3xl font-bold mb-4">My Favorite Pok&#39;emon ❤️</h1>
@@ -39,6 +45,16 @@ export default function FavoritesPage() {
       {/* No favorites message */}
       {favoritePokemon.length === 0 && (
         <p className="text-center">You haven&apos;t favorited any Pok&#39;emon yet.</p>
+      )}
+
+      {/* "Clear Favorites" Button */}
+      {favoritePokemon.length > 0 && (
+        <button
+          className="bg-red-500 text-white px-4 py-2 rounded-md mb-4 hover:bg-red-700 transition"
+          onClick={clearFavorites}
+        >
+          Clear Favorites ❌
+        </button>
       )}
 
       {/* Pokémon Grid */}

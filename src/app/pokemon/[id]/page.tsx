@@ -1,6 +1,6 @@
 import Image from "next/image";
+import Link from "next/link";
 
-// TypeScript interface for Pokémon details
 interface PokemonDetails {
   id: string;
   name: string;
@@ -14,39 +14,46 @@ interface PokemonDetails {
 }
 
 export default async function PokemonDetailPage({ params }: { params: { id: string } }) {
-  // Simulating loading for UI smoothness
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-
+  await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate loading
   const res = await fetch(`https://api.pokemontcg.io/v2/cards/${params.id}`);
   const { data }: { data: PokemonDetails } = await res.json();
 
   return (
-    <div className="p-6 max-w-2xl mx-auto animate-fade-in">
-      <h1 className="text-3xl font-bold mb-4">{data.name}</h1>
+    <div className="p-6 max-w-4xl mx-auto">
+      {/* Top Navigation */}
+      <div className="w-full flex justify-between mb-4">
+        <Link href="/pokemon" className="text-blue-600 hover:underline">← Back to Pokémon List</Link>
+        <Link href="/pokemon/favorites" className="text-blue-600 hover:underline">❤️ View Favorites</Link>
+      </div>
 
-      {/* Pokémon Image */}
-      <Image src={data.images.large} alt={data.name} width={300} height={420} className="w-full h-auto rounded-lg shadow-lg" />
-
-      {/* Pokémon Info */}
-      <p className="mt-4 text-lg"><strong>Supertype:</strong> {data.supertype}</p>
-      <p className="text-lg"><strong>Subtypes:</strong> {data.subtypes.join(", ")}</p>
-      <p className="text-lg"><strong>HP:</strong> {data.hp}</p>
-
-      {/* Attacks */}
-      {data.attacks && (
-        <div className="mt-4">
-          <h2 className="text-xl font-semibold">Attacks</h2>
-          {data.attacks.map((attack) => (
-            <div key={attack.name} className="p-2 border rounded-md mt-2 shadow-sm">
-              <p className="font-bold">{attack.name} - {attack.damage} damage</p>
-              <p className="text-sm">{attack.text}</p>
-            </div>
-          ))}
+      {/* Content Layout */}
+      <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
+        {/* Left Side - Pokémon Image */}
+        <div className="w-full md:w-1/3 flex justify-center">
+          <Image src={data.images.large} alt={data.name} width={250} height={350} className="rounded-lg shadow-lg" />
         </div>
-      )}
 
-      {/* Back to List Button */}
-      <a href="/pokemon" className="mt-6 inline-block text-blue-600 hover:underline">← Back to Pokémon List</a>
+        {/* Right Side - Pokémon Details */}
+        <div className="flex-1">
+          <h1 className="text-3xl font-bold mb-4">{data.name}</h1>
+          <p><strong>Supertype:</strong> {data.supertype}</p>
+          <p><strong>Subtypes:</strong> {data.subtypes.join(", ")}</p>
+          <p><strong>HP:</strong> {data.hp}</p>
+
+          {/* Attacks */}
+          {data.attacks && (
+            <div className="mt-4">
+              <h2 className="text-xl font-semibold">Attacks</h2>
+              {data.attacks.map((attack) => (
+                <div key={attack.name} className="p-2 border rounded-md mt-2 shadow-sm">
+                  <p className="font-bold">{attack.name} - {attack.damage} damage</p>
+                  <p className="text-sm">{attack.text}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
